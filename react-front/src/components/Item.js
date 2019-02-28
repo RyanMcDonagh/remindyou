@@ -11,7 +11,7 @@ class Item extends Component {
             <div>
             <li>{this.props.text}</li>
             <button 
-                className="btn btn-primary"
+                className="btn btn-danger"
                 style={{
                     display: "inline-block"
                 }}
