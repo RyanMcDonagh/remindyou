@@ -19,9 +19,9 @@ CREATE TABLE lists (
 
 CREATE TABLE tasks (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    list INT NOT NULL,
+    list_id INT NOT NULL,
     title VARCHAR(50) NOT NULL,
     description text NOT NULL,
 
-    FOREIGN KEY (list) REFERENCES lists(id)
+    FOREIGN KEY (list_id) REFERENCES lists(id)
 );

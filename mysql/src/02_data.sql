@@ -15,7 +15,7 @@ INSERT INTO lists (user, title) VALUES
     (3, "Sport")
 ;
 
-INSERT INTO tasks (list, title, description) VALUES
+INSERT INTO tasks (list_id, title, description) VALUES
     (1, "Buy food", "Apples, Bread, Eggs, Butter, Chocolate"),
     (1, "Walk Spot", "No more than 10 mins!"),
     (2, "Write forecasts", "Income, Expenditure, Weather"),
