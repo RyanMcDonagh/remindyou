@@ -1,12 +1,21 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import sqlalchemy
 import json
 import pymysql
 import os
 
+# State API version
+api = 'v1.0'
+
+# Initialise Flask application
 app = Flask(__name__)
+
+# Prevent CORS issue with Chrome
 CORS(app)
+
+# Configure Database location and initialise database connection
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}:{3}/{4}'.format(
     os.getenv('DB_USER', default='root'),
     os.getenv('DB_PASS', default='toor'),
@@ -16,6 +25,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://{0}:{1}@{2}:{3}/{4}'.fo
 )
 db = SQLAlchemy(app)
 
+# Define database tables
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column('id', db.Integer, primary_key=True)
@@ -38,13 +48,20 @@ class Task(db.Model):
     title = db.Column('title', db.Unicode, nullable=False)
     description = db.Column('description', db.Text, nullable=False)
 
-
+# API Routing
 @app.route('/')
 def hello():
     return "Hello world!"
 
-@app.route('/lists/<id>')
+
+# Get lists for a given user id
+@app.route('/{0}/lists/<id>'.format(api), methods=['GET'])
 def get_lists_by_user_id(id):
+    if List.query.filter_by(user=id).first() is None:
+        return Response({
+            'Could not find user id: {0}'.format(id)
+        }, status=404, mimetype='application/json')
+
     lists = List.query.filter_by(user=id)
     resp = [{
         "list_id": l.id,
@@ -53,7 +70,24 @@ def get_lists_by_user_id(id):
     return jsonify(resp)
 
 
-@app.route('/lists/new', methods=['POST'])
+# Delete a list with a given id
+@app.route('/{0}/lists/delete/<id>'.format(api), methods=['DELETE'])
+def delete_list(id):
+    try:
+        List.query.filter_by(id=id).one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        return Response({
+            'Could not find list id: {0}'.format(id)
+        }, status=404)
+
+    List.query.filter_by(id=id).delete()
+    db.session.commit()
+    return jsonify({
+        'status': 'success'
+    })
+
+
+@app.route('/{0}/lists/new'.format(api), methods=['POST'])
 def create_new_list():
     data = json.loads(request.data)
     l = List(
@@ -68,17 +102,18 @@ def create_new_list():
 
 
 
-@app.route('/tasks/<id>')
+@app.route('/{0}/tasks/<id>'.format(api))
 def get_tasks_by_list_id(id):
     tasks = Task.query.filter_by(list_id=id)
     resp = [{
+        "id": task.id,
         "title": task.title,
         "description": task.description
     } for task in tasks]
     return jsonify(resp)
 
 
-@app.route('/tasks/new', methods=['POST'])
+@app.route('/{0}/tasks/new'.format(api), methods=['POST'])
 def create_new_task():
     data=json.loads(request.data)
     t = Task(
@@ -87,6 +122,20 @@ def create_new_task():
         description=data['description']
     )
     db.session.add(t)
+    db.session.commit()
+    return jsonify({
+        'status': 'success'
+    })
+
+
+@app.route('/{0}/tasks/d/<id>'.format(api), methods=['DELETE'])
+def delete_task(id):
+    if Task.query.filter_by(id=id).first() is None:
+        return Response({
+            'Could not find task id: {0}'.format(id)
+        }, status=404, mimetype='application/json')
+
+    Task.query.filter_by(id=id).delete()
     db.session.commit()
     return jsonify({
         'status': 'success'

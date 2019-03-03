@@ -15,6 +15,7 @@ class List extends Component {
 
         this.deleteList = this.deleteList.bind(this);
         this.addItem = this.addItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this)
     }
 
     componentDidMount() {
@@ -22,19 +23,16 @@ class List extends Component {
     }
 
     getListItems() {
-        axios.get('http://localhost:5000/tasks/' + this.props.id)
+        axios.get('http://localhost:5000/v1.0/tasks/' + this.props.id)
             .then(response => {
                 this.setState({
                     items: response.data
-                }, function() {
-                    console.log('List state', this.state)
-                    console.log('getListItems data', response.data)
                 })
             });
     }
 
     addItem(title, description) {
-        axios.post('http://localhost:5000/tasks/new', {
+        axios.post('http://localhost:5000/v1.0/tasks/new', {
             "list_id": this.state.id,
             "title": title,
             "description": description
@@ -46,8 +44,18 @@ class List extends Component {
             })
     }
 
+    deleteItem(id) {
+        axios.delete('http://localhost:5000/v1.0/tasks/d/' + id)
+            .then(response => {
+                if (response.status === 200) {
+                    console.log(this);
+                    this.getListItems();
+                } 
+            })
+    }
+
     deleteList() {
-        this.props.removeList(this.props.list);
+        this.props.removeList(this.state.id);
     }
 
     render() {
@@ -61,8 +69,10 @@ class List extends Component {
                         // <li>{item.text}</li>
                         <Item 
                             key={item.id}
+                            id={item.id}
                             title={item.title}
                             description={item.description} 
+                            deleteItem={this.deleteItem}
                         />
                     ))
                 }
@@ -78,6 +88,7 @@ class List extends Component {
             >
             Delete
             </button>
+            <hr />
             </div>
         )
     }

@@ -25,7 +25,7 @@ class App extends Component {
     }
 
     getLists() {
-        axios.get('http://localhost:5000/lists/1')
+        axios.get('http://localhost:5000/v1.0/lists/1')
             .then(response => {
                 this.setState({
                     lists: response.data
@@ -40,7 +40,7 @@ class App extends Component {
          * This method is a handler that is passed to the CreateNewList component
          *  to create a new list in the database. 
          */
-        axios.post('http://localhost:5000/lists/new', {
+        axios.post('http://localhost:5000/v1.0/lists/new', {
             "user_id": 1,
             "title": title
         })
@@ -52,10 +52,15 @@ class App extends Component {
 
     }
 
-    removeList(list) {
-        this.setState({
-            lists: this.state.lists.filter(item => item !== list)
-        });
+    removeList(id) {
+        axios.delete('http://localhost:5000/v1.0/lists/delete/' + id)
+            .then(response => {
+                if (response.status === 200) {
+                    this.getLists();
+                } else if (response.stats === 404) {
+                    alert('List not found!')
+                }
+            })
     }
 
     render() {
