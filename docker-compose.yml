@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  mysql:
+    build: ./mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=toor
+    ports: 
+      - 3306:3306
+  flask:
+    build: ./python-flask
+    ports: 
+      - 5000:5000
+    depends_on:
+      - mysql
+  react:
+    build: ./react-front
+    ports:
+      - 1234:1234
+    depends_on:
+      - mysql
