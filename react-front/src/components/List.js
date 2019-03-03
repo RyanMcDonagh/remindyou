@@ -22,7 +22,7 @@ class List extends Component {
     }
 
     getListItems() {
-        axios.get('http://localhost:5000/tasks/' + this.state.id)
+        axios.get('http://localhost:5000/tasks/' + this.props.id)
             .then(response => {
                 this.setState({
                     items: response.data
@@ -33,11 +33,17 @@ class List extends Component {
             });
     }
 
-    addItem(item) {
-        this.setState({
-            items: [...this.state.items, item]
+    addItem(title, description) {
+        axios.post('http://localhost:5000/tasks/new', {
+            "list_id": this.state.id,
+            "title": title,
+            "description": description
         })
-        console.log('this.state.items', this.state.items);
+            .then(response => {
+                if (response.status === 200) {
+                    this.getListItems();
+                }
+            })
     }
 
     deleteList() {

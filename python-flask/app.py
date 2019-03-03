@@ -78,5 +78,20 @@ def get_tasks_by_list_id(id):
     return jsonify(resp)
 
 
+@app.route('/tasks/new', methods=['POST'])
+def create_new_task():
+    data=json.loads(request.data)
+    t = Task(
+        list_id=data['list_id'],
+        title=data['title'],
+        description=data['description']
+    )
+    db.session.add(t)
+    db.session.commit()
+    return jsonify({
+        'status': 'success'
+    })
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
