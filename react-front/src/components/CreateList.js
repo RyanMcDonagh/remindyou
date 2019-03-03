@@ -7,10 +7,6 @@ class CreateList extends Component {
         this.submit = this.submit.bind(this);
     }
 
-    componentDidMount() {
-        console.log('CreateList props', this.props);
-    }
-
     submit() {
         this.props.newList({
             title: document.getElementById("create-list-text").value,

@@ -7,9 +7,9 @@ class List extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: this.props.list.item,
-            title: this.props.list.title,
-            items: this.props.list.items
+            id: this.props.id,
+            title: this.props.title,
+            items: []
         }
 
         this.deleteList = this.deleteList.bind(this);
@@ -17,7 +17,20 @@ class List extends Component {
     }
 
     componentDidMount() {
-        console.log('List state', this.state);
+        this.getListItems();
+    }
+
+    getListItems() {
+        fetch('http://localhost:5000/tasks/' + this.state.id)
+            .then(response => response.json())
+            .then(json => {
+                this.setState({
+                    items: json
+                }, function() {
+                    console.log('List state', this.state)
+                    console.log('getListItems json', json)
+                })
+            });
     }
 
     addItem(item) {
@@ -42,14 +55,15 @@ class List extends Component {
                         // <li>{item.text}</li>
                         <Item 
                             key={item.id}
-                            text={item.text} 
+                            title={item.title}
+                            description={item.description} 
                         />
                     ))
                 }
             </ul>
 
             <AddItem 
-               list={this.props.list}
+               id={this.state.id}
                addItem={this.addItem}
             />
 

@@ -9,7 +9,7 @@ class Item extends Component {
     render() {
         return (
             <div>
-            <li>{this.props.text}</li>
+            <li>{this.props.title}</li>
             <button 
                 className="btn btn-danger"
                 style={{

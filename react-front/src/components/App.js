@@ -13,39 +13,26 @@ class App extends Component {
     constructor() {
         super();
         this.state = {
-            lists: [
-                {
-                    list_id: 1,
-                    title: 'Home',
-                    items: [
-                        {
-                            id: 342515,
-                            text: "Do washing"
-                        }, 
-                        {
-                            id: 1235245134,
-                            text: "Clean car"
-                        }
-                    ]
-                },
-                {
-                    list_id: 2,
-                    title: 'Work',
-                    items: [
-                        {
-                            id: 475982374592845,
-                            text: "Meet Barbara"
-                        },
-                        {
-                            id: 3985793457289457,
-                            text: "Write forecasts"
-                        }
-                    ]
-                }
-            ]
+            lists: []
         }
         this.newList = this.newList.bind(this);
         this.removeList = this.removeList.bind(this);
+    }
+
+    componentDidMount() {
+        this.getNewLists();
+    }
+
+    getNewLists() {
+        fetch('http://localhost:5000/lists/1')
+            .then(response => response.json())
+            .then(json => {
+                this.setState({
+                    lists: json
+                }, function() {
+                    console.log('App state', this.state)
+                })
+            });
     }
 
     newList(list) {
@@ -72,7 +59,8 @@ class App extends Component {
                     this.state.lists.map(list => (
                         <List
                             key={list.title}
-                            list={list}
+                            id={list.list_id}
+                            title={list.title}
                             removeList={this.removeList}
                         />
                     ))
