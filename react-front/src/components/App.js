@@ -7,6 +7,7 @@
 import React, { Component } from 'react';
 import List from './List';
 import CreateList from './CreateList';
+import axios from 'axios';
 
 class App extends Component {
 
@@ -20,30 +21,35 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.getNewLists();
+        this.getLists();
     }
 
-    getNewLists() {
-        fetch('http://localhost:5000/lists/1')
-            .then(response => response.json())
-            .then(json => {
+    getLists() {
+        axios.get('http://localhost:5000/lists/1')
+            .then(response => {
                 this.setState({
-                    lists: json
+                    lists: response.data
                 }, function() {
                     console.log('App state', this.state)
                 })
             });
     }
 
-    newList(list) {
+    newList(title) {
         /**
          * This method is a handler that is passed to the CreateNewList component
-         *  to allow a new list to be added to the App's list of lists in state.
+         *  to create a new list in the database. 
          */
+        axios.post('http://localhost:5000/lists/new', {
+            "user_id": 1,
+            "title": title
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    this.getLists();
+                }
+            })
 
-        this.setState({
-            lists: [...this.state.lists, list]
-        });
     }
 
     removeList(list) {

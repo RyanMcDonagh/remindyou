@@ -1,6 +1,7 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+import json
 import pymysql
 import os
 
@@ -50,6 +51,21 @@ def get_lists_by_user_id(id):
         "title": l.title
     } for l in lists]
     return jsonify(resp)
+
+
+@app.route('/lists/new', methods=['POST'])
+def create_new_list():
+    data = json.loads(request.data)
+    l = List(
+        user=data['user_id'],
+        title=data['title']
+    )
+    db.session.add(l)
+    db.session.commit()
+    return jsonify({
+        'status': 'success'
+    })
+
 
 
 @app.route('/tasks/<id>')

@@ -8,10 +8,8 @@ class CreateList extends Component {
     }
 
     submit() {
-        this.props.newList({
-            title: document.getElementById("create-list-text").value,
-            items: []
-        })
+        this.props.newList(document.getElementById("create-list-text").value)
+        document.getElementById("create-list-text").value = null;
     }
 
     render() {

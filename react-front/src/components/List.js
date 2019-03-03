@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Item from './Item';
 import AddItem from './AddItem';
+import axios from 'axios';
 
 class List extends Component {
 
@@ -21,14 +22,13 @@ class List extends Component {
     }
 
     getListItems() {
-        fetch('http://localhost:5000/tasks/' + this.state.id)
-            .then(response => response.json())
-            .then(json => {
+        axios.get('http://localhost:5000/tasks/' + this.state.id)
+            .then(response => {
                 this.setState({
-                    items: json
+                    items: response.data
                 }, function() {
                     console.log('List state', this.state)
-                    console.log('getListItems json', json)
+                    console.log('getListItems data', response.data)
                 })
             });
     }
