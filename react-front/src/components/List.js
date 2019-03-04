@@ -86,7 +86,7 @@ class List extends Component {
             <button
                 onClick={this.deleteList}
             >
-            Delete
+            Delete List
             </button>
             <hr />
             </div>
