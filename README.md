@@ -5,9 +5,9 @@ Welcome to RemindYou, a React/Flask based Reminder Application, utilising a MySQ
 ## To Use
 
 1)  Clone the repository
-2)  Run `docker-compuse up` on the root directory of the repository
-3)  Visit `http://localhost:1234` on your browser of choice
-4)  Once the app has loaded, login with the following credentials
+2)  Run `docker-compose up` on the root directory of the repository
+3)  Visit `http://localhost:1234` on your browser of choice once all containers are fully loaded
+4)  Once the app has loaded, login with the following credentials:
 
     `email`: `ryan@gmail.com`
     `password`: `ilikecats`
@@ -24,6 +24,7 @@ Welcome to RemindYou, a React/Flask based Reminder Application, utilising a MySQ
 2)  Styling - there isn't any.
     -  UI/UX isn't my biggest strength... I'm definitely a back-end logic guy.
     -  I believe that, for the purposes of coding for this job interview, CSS styling was not massively important, rather the communication between the API and the front-end was far more important, and the application showcases this.
+    -  I have utilised the minimum amount of Bootstrap, just to ensure the application isn't all Times New Roman and ugly buttons...
 
 3)  No registration page.
     -  Technically, Flask-Security does allow you to register users (try it: `http://localhost:5000/register`).
