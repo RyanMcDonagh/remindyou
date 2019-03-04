@@ -7,14 +7,6 @@ class AddItem extends Component {
     }
 
     submit() {
-
-        // console.log('value', document.getElementById("add-item-text" + this.props.id).value)
-        // this.props.addItem({
-        //     id: 1 + Math.random(),
-        //     text: document.getElementById("add-item-text" + this.props.id).value
-        // })
-        // document.getElementById("add-item-text" + this.props.id).value = null;
-
         this.props.addItem(
             document.getElementById("add-item-title" + this.props.id).value,
             document.getElementById("add-item-description" + this.props.id).value

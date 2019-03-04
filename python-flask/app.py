@@ -97,14 +97,11 @@ def hello():
 @app.route('/login', methods=['POST'])
 def login():
     print('success')
-
-
-
+    
 
 # Get lists for a given user id
 @app.route('/{0}/lists/<id>'.format(api), methods=['GET'])
 def get_lists_by_user_id(id):
-    print(request)
     if List.query.filter_by(user=id).first() is None:
         return Response({
             'Could not find any lists for user id: {0}'.format(id)

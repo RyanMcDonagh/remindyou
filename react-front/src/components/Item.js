@@ -11,7 +11,6 @@ class Item extends Component {
     }
 
     deleteItem() {
-        console.log(this);
         this.props.deleteItem(this.state.id);
     }
 

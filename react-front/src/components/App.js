@@ -30,7 +30,6 @@ class App extends Component {
     componentDidMount() {
         axios.get('http://localhost:5000/')
             .then(response => {
-                console.log('api prodded');
                 this.setState({
                     loaded: true
                 })
@@ -74,7 +73,6 @@ class App extends Component {
     removeList(id) {
         axios.delete('http://localhost:5000/v1.0/lists/delete/' + id)
             .then(response => {
-                console.log('remove list response', response);
                 if (response.status === 200) {
                     this.getLists();
                 } else if (response.stats === 404) {
@@ -96,7 +94,6 @@ class App extends Component {
 
         axios.post('http://localhost:5000/login', login)
             .then(response => {
-                console.log('response status', response.status)
                 if (response.status === 200) {
                     this.setState({
                         authenticated: {
@@ -107,7 +104,6 @@ class App extends Component {
                     }, () => {
                         alert('Login successful!')
                         this.getLists();
-                        console.log('post auth state', this.state);
                     })
                 }
             })
@@ -126,7 +122,7 @@ class App extends Component {
                 authenticated: false,
                 id: null
             }
-        }, () => console.log(this.state))
+        })
     }
 
     render() {

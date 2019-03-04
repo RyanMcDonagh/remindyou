@@ -48,7 +48,6 @@ class List extends Component {
         axios.delete('http://localhost:5000/v1.0/tasks/d/' + id)
             .then(response => {
                 if (response.status === 200) {
-                    console.log(this);
                     this.getListItems();
                 } 
             })
