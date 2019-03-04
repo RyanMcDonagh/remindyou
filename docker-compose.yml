@@ -9,6 +9,8 @@ services:
       - 3306:3306
   flask:
     build: ./python-flask
+    environment:
+      - DB_HOST=mysql
     ports: 
       - 5000:5000
     depends_on:
