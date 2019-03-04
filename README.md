@@ -29,6 +29,10 @@ Welcome to RemindYou, a React/Flask based Reminder Application, utilising a MySQ
     -  Technically, Flask-Security does allow you to register users (try it: `http://localhost:5000/register`).
     -  One of the remits for the application was a multi-user experience. Again, I ran out of time to properly implement this, though I promise that the user login provided does have an associated ID and, if further users could be created properly, these new users would have separate lists.
 
+4)  MySQL Database Doesn't Use Volumes
+    -  As a result of this, the database is wiped on reset. This isn't ideal for production, obviously.
+    -  Future improvements would be to implement a volume to store the data elsewhere, and read this data in on resets.
+
 ## What Did I Learn From This Project?
 
 -  Further consolidated React, Axios, Flask, SQLAlchemy and Docker skills acquired earlier in my career
