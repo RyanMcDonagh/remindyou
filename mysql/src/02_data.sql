@@ -1,9 +1,9 @@
 USE remindyou;
 
-INSERT INTO users (fName, lName, email) VALUES
-    ("Adam", "Apple", "a.apple@gmail.com"),
-    ("Becky", "Banana", "@gmail.com"),
-    ("Colin", "Cookie", "@gmail.com")
+INSERT INTO users (fName, lName, email, hash) VALUES
+    ("Adam", "Apple", "a.apple@gmail.com", "3A7BD3E2360A3D29EEA436FCFB7E44C735D117C42D1C1835420B6B9942DD4F1B"),
+    ("Becky", "Banana", "b.banana@gmail.com", "B493D48364AFE44D11C0165CF470A4164D1E2609911EF998BE868D46ADE3DE4E"),
+    ("Colin", "Cookie", "c.cookie@gmail.com", "946040ACF82BA0547E32B167F0EFC206EAE99234A350EBC94D9829B88CC8A787")
 ;
 
 INSERT INTO lists (user, title) VALUES
