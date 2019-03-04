@@ -19,6 +19,8 @@ class AddItem extends Component {
             document.getElementById("add-item-title" + this.props.id).value,
             document.getElementById("add-item-description" + this.props.id).value
         )
+        document.getElementById("add-item-title" + this.props.id).value = null;
+        document.getElementById("add-item-description" + this.props.id).value = null;
     }
 
     render() {
