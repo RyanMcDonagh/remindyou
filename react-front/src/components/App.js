@@ -14,6 +14,7 @@ class App extends Component {
     constructor() {
         super();
         this.state = {
+            loaded: false,
             authenticated: {
                 authenticated: false,
                 id: null,
@@ -26,17 +27,30 @@ class App extends Component {
         this.authenticate = this.authenticate.bind(this);
     }
 
+    componentDidMount() {
+        axios.get('http://localhost:5000/')
+            .then(response => {
+                console.log('api prodded');
+                this.setState({
+                    loaded: true
+                })
+            })
+    }
+
     getLists() {
-        let config = {
-            headers: {
-                "Authentication_Token": this.state.authentication_token
-            }
-        }
         axios.get('http://localhost:5000/v1.0/lists/' + this.state.authenticated.id)
             .then(response => {
                 this.setState({
                     lists: response.data
                 })
+            })
+            .catch(error => {
+                if (error.response.status === 404) {
+                    // User has no lists
+                    this.setState({
+                        lists: []
+                    })
+                }
             });
     }
 
@@ -60,6 +74,7 @@ class App extends Component {
     removeList(id) {
         axios.delete('http://localhost:5000/v1.0/lists/delete/' + id)
             .then(response => {
+                console.log('remove list response', response);
                 if (response.status === 200) {
                     this.getLists();
                 } else if (response.stats === 404) {
@@ -115,6 +130,9 @@ class App extends Component {
     }
 
     render() {
+        if (!this.state.loaded) {
+            return <div>Initialising...</div>
+        }
         if (!this.state.authenticated.authenticated) {
             return (
                 <div>

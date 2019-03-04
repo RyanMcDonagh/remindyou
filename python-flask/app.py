@@ -90,9 +90,7 @@ def create_user():
 
 # API Routing
 @app.route('/')
-@login_required
 def hello():
-    print(current_user.id)
     return "Hello world!"
 
 
@@ -130,6 +128,7 @@ def delete_list(id):
             'Could not find list id: {0}'.format(id)
         }, status=404)
 
+    Task.query.filter_by(list_id=id).delete()
     List.query.filter_by(id=id).delete()
     db.session.commit()
     return jsonify({
