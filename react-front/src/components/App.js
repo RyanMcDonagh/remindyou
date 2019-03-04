@@ -16,7 +16,8 @@ class App extends Component {
         this.state = {
             authenticated: {
                 authenticated: false,
-                id: null
+                id: null,
+                token: null
             },
             lists: []
         }
@@ -25,17 +26,16 @@ class App extends Component {
         this.authenticate = this.authenticate.bind(this);
     }
 
-    componentDidMount() {
-        this.getLists();
-    }
-
     getLists() {
-        axios.get('http://localhost:5000/v1.0/lists/1')
+        let config = {
+            headers: {
+                "Authentication_Token": this.state.authentication_token
+            }
+        }
+        axios.get('http://localhost:5000/v1.0/lists/' + this.state.authenticated.id)
             .then(response => {
                 this.setState({
                     lists: response.data
-                }, function() {
-                    console.log('App state', this.state)
                 })
             });
     }
@@ -46,7 +46,7 @@ class App extends Component {
          *  to create a new list in the database. 
          */
         axios.post('http://localhost:5000/v1.0/lists/new', {
-            "user_id": 1,
+            "user_id": this.state.authenticated.id,
             "title": title
         })
             .then(response => {
@@ -70,18 +70,38 @@ class App extends Component {
 
     authenticate() {
         const login = {
-            username: document.getElementById('login-username').value,
+            email: document.getElementById('login-email').value,
             password: document.getElementById('login-password').value
         }
+        
+        document.getElementById('login-email').value = null;
+        document.getElementById('login-password').value = null;
 
         console.log('login creds', login);
 
-        this.setState({
-            authenticated: {
-                authenticated: true,
-                id: 1
-            }
-        }, () => console.log(this.state))
+        axios.post('http://localhost:5000/login', login)
+            .then(response => {
+                console.log('response status', response.status)
+                if (response.status === 200) {
+                    this.setState({
+                        authenticated: {
+                            authenticated: true,
+                            id: response.data.response.user.id,
+                            token: response.data.response.user.authentication_token
+                        }
+                    }, () => {
+                        alert('Login successful!')
+                        this.getLists();
+                        console.log('post auth state', this.state);
+                    })
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 400) {
+                    alert('Invalid username and password!');
+                }
+
+            });
 
     }
 
@@ -99,14 +119,14 @@ class App extends Component {
             return (
                 <div>
                     <h2>Please login:</h2>
-                    <label>Username:</label>
+                    <label>Email:</label>
                     <input 
                         type="text"
-                        id="login-username"    
+                        id="login-email"    
                     ></input>
                     <label>Password:</label>
                     <input 
-                        type="text"
+                        type="password"
                         id="login-password"                        
                         ></input>
                     <button 
